@@ -7,19 +7,19 @@ import axios from "axios";
 export default function Weather(props) {
   const [weatherData, setWeatherData] = useState({ ready: false });
   const [city, setCity] = useState(props.defaultCity);
-  const [ready, setReady] = useState();
 
   function handleResponse(response) {
     setWeatherData({
-      iconUrl: response.data.weather[0].icon,
+      ready: true,
+      coordinates: response.data.coord,
       temperature: response.data.main.temp,
+      humidity: response.data.main.humidity,
+      date: new Date(response.data.dt * 1000),
+      description: response.data.weather[0].description,
+      icon: response.data.weather[0].icon,
       wind: response.data.wind.speed,
       city: response.data.name,
-      humidity: response.data.main.humidity,
-      describe: response.data.weather[0].description,
-      date: new Date(response.data.dt * 1000),
     });
-    setReady(true);
   }
   function search() {
     const apiKey = "bf54175800a55e59e6c4d6461deeef12";
@@ -33,7 +33,7 @@ export default function Weather(props) {
   function handleCity(event) {
     setCity(event.target.value);
   }
-  if (ready) {
+  if (weatherData.ready) {
     return (
       <div className="weather border #dadde1 rounded">
         <form onSubmit={handleSubmit}>
